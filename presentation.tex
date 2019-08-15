@@ -1,0 +1,174 @@
+\documentclass{beamer}
+%\documentclass[notes=only]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{ulem}
+\usepackage{amsmath}
+
+\lstdefinestyle{customcbig}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+%  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+%  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\scriptsize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+
+\lstdefinestyle{customctiny}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+%  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\tiny\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+ 
+\usetheme{Dresden}
+
+\title[SOFTENG 370 Tutorial 4 (2019)] %optional
+{Test 1 Revision}
+  
+\author{Edward Zhang}
+ 
+% \institute[UoA] % (optional)
+% {
+%   Department of ECSE\\
+%   The University of Auckland
+% }
+ 
+\date[August 2019] % (optional)
+{SOFTENG 370 T4}
+
+\begin{document}
+\frame{\titlepage}
+\section{Past Test Questions}
+\subsection{OS History}
+\begin{frame}
+  \frametitle{2011 SE370/CS340 Test}
+  \begin{block}{Question}
+    Very early computers did not provide interrupt handling capabilities. What advantage does an interrupt handling system provide?
+  \end{block}
+  \pause
+  SPOOLing: Interrupt driven I/O, removing the need to wait for our computers to wait for I/O. Now we can do other stuff while waiting for our punch card input or printer output.
+\end{frame}
+\begin{frame}
+  \frametitle{2011 SE370/CS340 Test}
+  \begin{block}{Question}
+    The first personal computer operating systems (including the Mac) were effectively resident monitors. Describe one way in which early PC operating systems were like resident monitors.
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item MS-DOS and Apple-DOS ran one program at a time
+    \item Lack of Virtual Memory
+    \item Maintained a JCL-like user interface
+  \end{itemize}
+\end{frame}
+\subsection{Virtual Machines}
+\begin{frame}
+  \frametitle{Derived from 2018 SE370 Test}
+  \begin{block}{Question}
+    What is an issue with using ``trap and emulate'' virtualization on x86 (prior to virtualization extensions such as Intel VT and AMD-V)?
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item Instructions exist that can run in both user and kernel mode, give different output (such as \texttt{POPF}).
+    \item Instructions also exist to allow a program to determine whether it was in privileged.
+    \item These instructions don't throw an exception (trap), and thus cannot be emulated by the VMM.
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \begin{block}{Question}
+    \dots and how do hardware virtualization extensions help resolve this?
+  \end{block}
+  \pause
+  Additional instructions allow the VMM to enter a special privledged mode (some call this ``ring -1'', although it's not a real protection ring), which allows it to host different guest kernels, all of which \emph{believe} they have ring 0 (kernel mode) access to the system.
+\end{frame}
+\begin{frame}
+  \frametitle{2018 SE370 Test}
+  \begin{block}{Question}
+    The Windows subsystem for Linux is NOT a virtual machine. Explain how it is different from a virtual machine.
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item No seperate kernel - instead, Unix syscalls are mapped into NT ones through a kernel module (LXCore)
+    \item Somewhat similar to Application virtualization
+  \end{itemize}
+  \begin{exampleblock}{Trivia}
+    WSL2 uses a real Linux kernel running under Hyper-V, due to performance and feasibility issues implementing all syscalls in LXCore/on top of NT.
+  \end{exampleblock}
+\end{frame}
+\subsection{Implementation}
+\begin{frame}
+  \frametitle{2011 SE370/CS340 Test}
+  \begin{block}{Question}
+    Give reasons why a language such as Java is seldom used to implement operating systems?
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item No direct access to memory*
+    \item Insufficient control over memory allocation*
+    \item Not easily mapped to machine code
+    \item more...
+  \end{itemize}
+  \begin{exampleblock}{Trivia}
+    *One can technically manually allocate off-heap memory or access memory-mapped devices using \texttt{sun.misc.unsafe}
+  \end{exampleblock}
+\end{frame}
+\subsection{Processes and Threads}
+\begin{frame}
+  \frametitle{2011, 2018 Test}
+  \begin{block}{Question}
+    Explain the difference between a thread and a process?
+  \end{block}
+  \pause
+  Processes have their own memory space and connections to files/devices (file descriptors), whereas threads typically share memory space within a given process (but have their own stack so they can be executing different code).
+\end{frame}
+\begin{frame}
+  \frametitle{2018 SE370 Test}
+  \begin{block}{Question}
+    What is the most important difference between system level and user level threads, and what is a consequence of the difference?
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item With user-level threads, the OS only sees one thread per process, whereas with system-level threads the OS is aware of multiple threads per process.
+    \item On a multiprocessor, different system-level threads can be scheduled on different processors, since the OS can schedule them on different processors.
+  \end{itemize}
+\end{frame}
+\subsection{Scheduling}
+\begin{frame}
+  \frametitle{2018 SE370 Test}
+  \begin{block}{Question}
+    In general a small time-slice makes computers responsive. Explain why this is so and what penalty is paid as the time-slice gets smaller.
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item A context switch between two tasks takes a certain amount of time, as registers, stack pointers, etc. need to be switched out.
+    \item As a result, smaller time slices means more context switches and thus lower throughput (but lower latency!).
+  \end{itemize}
+\end{frame}
+\end{document}
