@@ -207,7 +207,7 @@
   \frametitle{Step 4}
   What speedup did you get? With $n$ cores, did you get near $n$ times speedup?\\
   \pause
-  Very dependent on your implementation - if you have a locked counter for number of threads, there can be massive contention for this, thus decreasing performance. However, if you used a different algorithm to more effectively divide up tasks without a global counter, you may have seen a larger performance improvement.
+  If you have a locked counter for number of threads, there can be massive contention for this, thus decreasing performance. However a different algorithm to more effectively divide up tasks without a global counter could result in a performance improvement (although the question asked for a counter).
 \end{frame}
 \begin{frame}
   \frametitle{Step 5}
@@ -229,5 +229,9 @@
   \frametitle{Step 7}
   It's the same thing but more overhead concerns because more processes being created, and more pipes communicating.\\
   Also depending on how you deal with contention for the core/process counter - do you pass one value around all the processes, or try something smarter (maybe use the pipe as a semaphore)
+\end{frame}
+\begin{frame}
+  \frametitle{Step 8/9}
+  Very similar to threads
 \end{frame}
 \end{document}
