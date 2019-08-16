@@ -66,15 +66,14 @@
 
 \begin{document}
 \frame{\titlepage}
-\section{Past Test Questions}
-\subsection{OS History}
+\section{OS History}
 \begin{frame}
   \frametitle{2011 SE370/CS340 Test}
   \begin{block}{Question}
     Very early computers did not provide interrupt handling capabilities. What advantage does an interrupt handling system provide?
   \end{block}
   \pause
-  SPOOLing: Interrupt driven I/O, removing the need to wait for our computers to wait for I/O. Now we can do other stuff while waiting for our punch card input or printer output.
+  SPOOLing: Interrupt driven I/O, removing the need to wait for our computers to wait for I/O. Now we can do other stuff while waiting for our punch card input or printer output. Also allows for preemptive multitasking since a clock can interrupt.
 \end{frame}
 \begin{frame}
   \frametitle{2011 SE370/CS340 Test}
@@ -83,12 +82,12 @@
   \end{block}
   \pause
   \begin{itemize}
-    \item MS-DOS and Apple-DOS ran one program at a time
-    \item Lack of Virtual Memory
-    \item Maintained a JCL-like user interface
+    \item Single task at a time
+    \item No memory protection
+    \item Standard IO routines in memory (as opposed to drivers and syscalls)
   \end{itemize}
 \end{frame}
-\subsection{Virtual Machines}
+\section{Virtual Machines}
 \begin{frame}
   \frametitle{Derived from 2018 SE370 Test}
   \begin{block}{Question}
@@ -122,7 +121,7 @@
     WSL2 uses a real Linux kernel running under Hyper-V, due to performance and feasibility issues implementing all syscalls in LXCore/on top of NT.
   \end{exampleblock}
 \end{frame}
-\subsection{Implementation}
+\section{Implementation}
 \begin{frame}
   \frametitle{2011 SE370/CS340 Test}
   \begin{block}{Question}
@@ -132,14 +131,14 @@
   \begin{itemize}
     \item No direct access to memory*
     \item Insufficient control over memory allocation*
-    \item Not easily mapped to machine code
-    \item more...
+    \item Runs inside JVM rather than directly on hardware
+    \item \sout{Performance} - not entirely true
   \end{itemize}
   \begin{exampleblock}{Trivia}
     *One can technically manually allocate off-heap memory or access memory-mapped devices using \texttt{sun.misc.unsafe}
   \end{exampleblock}
 \end{frame}
-\subsection{Processes and Threads}
+\section{Processes and Threads}
 \begin{frame}
   \frametitle{2011, 2018 Test}
   \begin{block}{Question}
@@ -159,7 +158,7 @@
     \item On a multiprocessor, different system-level threads can be scheduled on different processors, since the OS can schedule them on different processors.
   \end{itemize}
 \end{frame}
-\subsection{Scheduling}
+\section{Scheduling}
 \begin{frame}
   \frametitle{2018 SE370 Test}
   \begin{block}{Question}
@@ -171,4 +170,14 @@
     \item As a result, smaller time slices means more context switches and thus lower throughput (but lower latency!).
   \end{itemize}
 \end{frame}
+\section{Low-level C}
+\begin{frame}
+  \frametitle{2011 SE370/CS340 Test}
+  \begin{block}{Question}
+    What error do you commonly get if you try to access a pointer which has not been initialised correctly in Linux?
+  \end{block}
+  \pause
+  Segmentation Fault (a memory access violation)
+\end{frame}
+\section{Assignment 1}
 \end{document}
