@@ -180,4 +180,54 @@
   Segmentation Fault (a memory access violation)
 \end{frame}
 \section{Assignment 1}
+\begin{frame}
+  \frametitle{Step 1}
+  \begin{itemize}
+    \item Why are we segfaulting?
+    \item Stack vs. Heap memory allocation
+    \item Expanding the size of the stack
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Step 2}
+  \begin{itemize}
+    \item What performance speedup did you get?
+    \item Recall what \texttt{pthread\_create} and \texttt{pthread\_join} do
+  \end{itemize}
+  \pause
+  Performance gain should've been nearly 2x
+\end{frame}
+\begin{frame}
+  \frametitle{Step 3}
+  Why is this a dumb idea?\\
+  \pause
+  Consider how many times do we have to copy the arary. Also context switch penalities when number of active threads dramatically exceeds the number of h/w threads.
+\end{frame}
+\begin{frame}
+  \frametitle{Step 4}
+  What speedup did you get? With $n$ cores, did you get near $n$ times speedup?\\
+  \pause
+  Very dependent on your implementation - if you have a locked counter for number of threads, there can be massive contention for this, thus decreasing performance. However, if you used a different algorithm to more effectively divide up tasks without a global counter, you may have seen a larger performance improvement.
+\end{frame}
+\begin{frame}
+  \frametitle{Step 5}
+  Consider how spinlocks can be more performant than mutexes.\\
+  \pause
+  Spinlocks don't put a thread to sleep - thus, if the wait time is very short then spinlocks are more performant as we don't need to switch threads away and back again.
+  \begin{exampleblock}{Trivia}
+    Some implementations of mutex are actually hybrid-mutexes. This means, assuming there's more than 1 CPU core, a mutex will actually spinlock for a certain period of time before the thread is put to sleep, thus improving performance in some time.
+  \end{exampleblock}
+\end{frame}
+\begin{frame}
+  \frametitle{Step 6}
+  Processes vs. Threads (see question from before). Performance of pipes.\\
+  \pause
+  Again pipe performance is implementation dependent. However, pipes are generally slower than shared memory, so we should see this be slower than Step 2.\\
+  Also consider creating a process is slightly more expensive than a thread, although this doesn't really matter if we're just creating one extra process.
+\end{frame}
+\begin{frame}
+  \frametitle{Step 7}
+  It's the same thing but more overhead concerns because more processes being created, and more pipes communicating.\\
+  Also depending on how you deal with contention for the core/process counter - do you pass one value around all the processes, or try something smarter (maybe use the pipe as a semaphore)
+\end{frame}
 \end{document}
